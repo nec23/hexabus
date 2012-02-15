@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>                                                                  
+ <head>                                                                  
+ <script type="text/javascript" src="jquery.js"></script>          
+ </head>                                                                 
+ <body>                                                                  
+	 <div id="config">
+		 <p><b>If</b> <span name="ifselectors"></span> <button name="addif">Add Condition</button></p> 
+		 <p><b>While</b> <span name="whileselectors"></span> <button name="addwhile">Add Condition</button></p>
+		<p><b>Then Write</b> <input name="value" type="text" /> <b>to Endpoint</b> <input name="eid" type="text" /></p>
+		<button name="addrule">Add this Rule</button>
+	</div>
+	<hr>
+	<h3>Rules:</h3>
+	<div id="rules"></div>
+</body>                                                                 
+ <script type="text/javascript">                                         
+	 var rules = new Array();
+	 $('button[name="addif"]').click(function() {
+			$('span[name="ifselectors"]').append('<select><option value="0">Cond 0</option><option value="1">Cond 1</option></select>');
+			});
+ 	$('button[name="addwhile"]').click(function() {
+			$('span[name="whileselectors"]').append('<select><option value="0">Cond 0</option><option value="1">Cond 1</option></select>');
+			});
+ 	$('button[name="addrule"]').click(function() {
+			$("#rules").append("<b>Rule#"+rules.length+":</b><br /><b>If</b>");
+			$('span[name="ifselectors"] select').each(function(index) {
+					$("#rules").append(" Cond " + $(this).val());
+					});
+			$("#rules").append("<br />");
+			rules.push(rules.length);
+			});
+ </script>                                                               
+ </html>
