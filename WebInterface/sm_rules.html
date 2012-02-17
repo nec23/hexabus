@@ -4,13 +4,22 @@
  <script type="text/javascript" src="jquery.js"></script>          
  </head>                                                                 
  <body>                                                                  
-	 <div id="config">
-		 <p><b>If</b> <span name="ifselectors"></span> <button name="addif">Add Condition</button></p> 
-		 <p><b>While</b> <span name="whileselectors"></span> <button name="addwhile">Add Condition</button></p>
+	 <div id="condconfig">
+		 <p><b>Condition:</b></p> 
+		<select><option value="0">Received data from</option><option value="1">Date/Time</option></select>
+		<b>IP</b><input name="ip" type="text" />
+		<b>with value</b><select id="operator"></select><input id="inputval" type="text" />
+		<p><button id="addcond">Add this condition</button><button name="reset">Reset</button></p>
+		<h3>Conditions:</h3>
+		<div id="conds"></div>
+	</div>
+	<hr>
+	<div id="ruleconfig">
+		 <p><b>If</b> <span name="ifselectors"></span><br /> <button name="addif">Add Condition</button></p> 
+		 <p><b>While</b> <span name="whileselectors"></span><br /> <button name="addwhile">Add Condition</button></p>
 		<p><b>Then Write</b> <input name="value" type="text" /> <b>to Endpoint ID</b> <input name="eid" type="text" /></p>
 		<button name="addrule">Add this Rule</button><button name="reset">Reset</button>
 	</div>
-	<hr>
 	<h3>Rules:</h3>
 	<div id="rules"></div>
 </body>                                                                 
