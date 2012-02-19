@@ -289,7 +289,7 @@ USB_INTERFACEDESC(	\
 //a possibility.
 #if USB_CONF_MACINTOSH
 /* Prefer CDC-ECM network enumeration (Macintosh, linux) */
-FLASH uint8_t usb_dev_config_order[] = {
+const FLASH uint8_t usb_dev_config_order[] = {
 	USB_CONFIG_RNDIS, //windows gets networking only (if not here gets serial only)
 #if USB_CONF_SERIAL
 	USB_CONFIG_ECM_DEBUG, //mac, linux get networking and serial port
@@ -306,7 +306,7 @@ FLASH uint8_t usb_dev_config_order[] = {
 };
 #else
 /* Prefer RNDIS network enumeration (Windows, linux) */
-FLASH uint8_t usb_dev_config_order[] = {
+const FLASH uint8_t usb_dev_config_order[] = {
 
 //	USB_CONFIG_ECM, //windows doesnt like this here, will not go on to RNDIS
 #if USB_CONF_SERIAL
@@ -329,7 +329,7 @@ FLASH uint8_t usb_dev_config_order[] = {
 #endif /* USB_CONF_MACINTOSH */
 
 // usb_user_device_descriptor
-FLASH S_usb_device_descriptor usb_dev_desc_composite =
+const FLASH S_usb_device_descriptor usb_dev_desc_composite =
 {
   sizeof(usb_dev_desc_composite)
 , DEVICE_DESCRIPTOR
@@ -349,7 +349,7 @@ FLASH S_usb_device_descriptor usb_dev_desc_composite =
 
 
 // usb_user_configuration_descriptor FS
-FLASH S_usb_user_configuration_descriptor_composite usb_conf_desc_composite = {
+const FLASH S_usb_user_configuration_descriptor_composite usb_conf_desc_composite = {
 	USB_CONFIG_DESC(
 		sizeof(usb_conf_desc_composite),
 		COMPOSITE_NB_INTERFACE,
@@ -401,7 +401,7 @@ FLASH S_usb_device_descriptor usb_dev_desc_network =
 */
 
 // usb_user_configuration_descriptor FS
-FLASH S_usb_user_configuration_descriptor_network usb_conf_desc_network = {
+const FLASH S_usb_user_configuration_descriptor_network usb_conf_desc_network = {
 	USB_CONFIG_DESC(
 		sizeof(usb_conf_desc_network),
 		NETWORK_NB_INTERFACE,
@@ -440,7 +440,7 @@ FLASH S_usb_device_descriptor usb_dev_desc_eem =
 
 
 // usb_user_configuration_descriptor FS
-FLASH S_usb_user_configuration_descriptor_eem usb_conf_desc_eem = {
+const FLASH S_usb_user_configuration_descriptor_eem usb_conf_desc_eem = {
 	USB_CONFIG_DESC(
 		sizeof(usb_conf_desc_eem),
 		EEM_NB_INTERFACE,
@@ -453,7 +453,7 @@ FLASH S_usb_user_configuration_descriptor_eem usb_conf_desc_eem = {
 };
 
 
-FLASH S_usb_user_configuration_descriptor_ecm usb_conf_desc_ecm = {
+const FLASH S_usb_user_configuration_descriptor_ecm usb_conf_desc_ecm = {
 	USB_CONFIG_DESC(
 		sizeof(usb_conf_desc_ecm),
 		2,	// Interface Count
@@ -465,7 +465,7 @@ FLASH S_usb_user_configuration_descriptor_ecm usb_conf_desc_ecm = {
 	CDC_ECM_INTERFACES
 };
 
-FLASH S_usb_user_configuration_descriptor_ecm_debug usb_conf_desc_ecm_debug = {
+const FLASH S_usb_user_configuration_descriptor_ecm_debug usb_conf_desc_ecm_debug = {
 	USB_CONFIG_DESC(
 		sizeof(usb_conf_desc_ecm_debug),
 		4,	// Interface Count
@@ -523,7 +523,7 @@ FLASH S_usb_device_descriptor usb_dev_desc_mass =
 #if USB_CONF_STORAGE
 
 // usb_user_configuration_descriptor FS
-FLASH S_usb_user_configuration_descriptor_mass usb_conf_desc_mass = {
+const FLASH S_usb_user_configuration_descriptor_mass usb_conf_desc_mass = {
  { sizeof(S_usb_configuration_descriptor)
  , CONFIGURATION_DESCRIPTOR
  , Usb_write_word_enum_struc(sizeof(S_usb_user_configuration_descriptor_mass))
@@ -571,7 +571,7 @@ FLASH S_usb_user_configuration_descriptor_mass usb_conf_desc_mass = {
 
                                       // usb_user_language_id
 
-FLASH S_usb_language_id usb_user_language_id = {
+const FLASH S_usb_language_id usb_user_language_id = {
   sizeof(usb_user_language_id)
 , STRING_DESCRIPTOR
 , Usb_write_word_enum_struc(LANGUAGE_ID)

@@ -60,12 +60,12 @@
 #define MASS_STORAGE_RESET        0xFF
 #define GET_MAX_LUN               0xFE
 
-extern  FLASH S_usb_device_descriptor usb_dev_desc_composite;
-extern  FLASH S_usb_device_descriptor usb_dev_desc_network;
-extern  FLASH S_usb_user_configuration_descriptor_composite usb_conf_desc_composite;
-extern  FLASH S_usb_user_configuration_descriptor_network usb_conf_desc_network;
-extern  FLASH S_usb_device_qualifier_descriptor usb_qual_desc;
-extern  FLASH S_usb_language_id usb_user_language_id;
+const extern  FLASH S_usb_device_descriptor usb_dev_desc_composite;
+const extern  FLASH S_usb_device_descriptor usb_dev_desc_network;
+const extern  FLASH S_usb_user_configuration_descriptor_composite usb_conf_desc_composite;
+const extern  FLASH S_usb_user_configuration_descriptor_network usb_conf_desc_network;
+const extern  FLASH S_usb_device_qualifier_descriptor usb_qual_desc;
+const extern  FLASH S_usb_language_id usb_user_language_id;
 
 
 

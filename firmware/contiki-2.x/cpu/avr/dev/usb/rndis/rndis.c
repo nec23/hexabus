@@ -95,7 +95,7 @@ extern U8   data_to_transfer;
 /**
  * \brief List of supported RNDIS OID's
  */
-prog_uint32_t OIDSupportedList[] = {
+const prog_uint32_t OIDSupportedList[] = {
 		/* Required General */
         OID_GEN_SUPPORTED_LIST            ,
         OID_GEN_HARDWARE_STATUS           ,

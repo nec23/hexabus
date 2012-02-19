@@ -82,7 +82,7 @@ static  U8   endpoint_status[NB_ENDPOINTS];
 #ifdef AVRGCC
         PGM_VOID_P pbuffer;
 #else
-        U8   FLASH *pbuffer;
+        const U8   FLASH *pbuffer;
 #endif
         U8   data_to_transfer;
 
@@ -95,10 +95,10 @@ static  U8   bmRequestType;
 		usb_mode_t usb_mode = rndis_debug;
 
 extern  bit     usb_connected;
-extern  FLASH    S_usb_device_descriptor             usb_user_device_descriptor_network;
-extern  FLASH    S_usb_user_configuration_descriptor_network usb_user_configuration_descriptor_network;
-extern  FLASH    S_usb_device_descriptor             usb_user_device_descriptor_composite;
-extern  FLASH    S_usb_user_configuration_descriptor_composite usb_user_configuration_descriptor_composite;
+const extern  FLASH    S_usb_device_descriptor             usb_user_device_descriptor_network;
+const extern  FLASH    S_usb_user_configuration_descriptor_network usb_user_configuration_descriptor_network;
+const extern  FLASH    S_usb_device_descriptor             usb_user_device_descriptor_composite;
+const extern  FLASH    S_usb_user_configuration_descriptor_composite usb_user_configuration_descriptor_composite;
 
 //! usb_process_request.
 //!
