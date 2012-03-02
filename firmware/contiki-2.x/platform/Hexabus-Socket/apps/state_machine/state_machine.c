@@ -68,7 +68,7 @@ bool eval(uint8_t condIndex, struct hxb_envelope *envelope) {
   {
     case HXB_DTYPE_BOOL:
     case HXB_DTYPE_UINT8:
-      PRINTF("Uint8/bool: Got value %d\r\n", (*(uint8_t*)&envelope->value.data));
+      PRINTF("Uint8/bool: Got value %d - comparing to %d.\r\n", (*(uint8_t*)&envelope->value.data), *(uint8_t*)&cond.data);
       if(cond.op == STM_EQ)  return *(uint8_t*)&envelope->value.data == *(uint8_t*)&cond.data;
       if(cond.op == STM_LEQ) return *(uint8_t*)&envelope->value.data <= *(uint8_t*)&cond.data;
       if(cond.op == STM_GEQ) return *(uint8_t*)&envelope->value.data >= *(uint8_t*)&cond.data;
@@ -77,7 +77,7 @@ bool eval(uint8_t condIndex, struct hxb_envelope *envelope) {
       if(cond.op == STM_NEQ) return *(uint8_t*)&envelope->value.data != *(uint8_t*)&cond.data;
       break;
     case HXB_DTYPE_UINT32:
-      PRINTF("Uint32: Got value %d\r\n", (*(uint32_t*)&envelope->value.data));
+      PRINTF("Uint32: Got value %d - comparing to %d.\r\n", (*(uint32_t*)&envelope->value.data), *(uint32_t*)&cond.data);
       if(cond.op == STM_EQ)  return *(uint32_t*)&envelope->value.data == *(uint32_t*)&cond.data;
       if(cond.op == STM_LEQ) return *(uint32_t*)&envelope->value.data <= *(uint32_t*)&cond.data;
       if(cond.op == STM_GEQ) return *(uint32_t*)&envelope->value.data >= *(uint32_t*)&cond.data;
@@ -86,7 +86,7 @@ bool eval(uint8_t condIndex, struct hxb_envelope *envelope) {
       if(cond.op == STM_NEQ) return *(uint32_t*)&envelope->value.data != *(uint32_t*)&cond.data;
       break;
     case HXB_DTYPE_FLOAT:
-      PRINTF("Float: Got value %d/1000\r\n", (uint32_t)(1000 * (*(float*)&envelope->value.data)));
+      PRINTF("Float: Got value %d/1000 - comparing to %d/1000.\r\n", (uint32_t)(1000 * (*(float*)&envelope->value.data)), (uint32_t)(1000 * (*float*)&cond.data));
       if(cond.op == STM_EQ)  return *(float*)&envelope->value.data == *(float*)&cond.data;
       if(cond.op == STM_LEQ) return *(float*)&envelope->value.data <= *(float*)&cond.data;
       if(cond.op == STM_GEQ) return *(float*)&envelope->value.data >= *(float*)&cond.data;
