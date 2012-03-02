@@ -86,7 +86,7 @@ bool eval(uint8_t condIndex, struct hxb_envelope *envelope) {
       if(cond.op == STM_NEQ) return *(uint32_t*)&envelope->value.data != *(uint32_t*)&cond.data;
       break;
     case HXB_DTYPE_FLOAT:
-      PRINTF("Float: Got value %d/1000 - comparing to %d/1000.\r\n", (uint32_t)(1000 * (*(float*)&envelope->value.data)), (uint32_t)(1000 * (*(float*)&cond.data)));
+      PRINTF("Float: Got value %d/1000 - comparing to %d/1000. (Raw value: %lx)\r\n", (uint32_t)(1000 * (*(float*)&envelope->value.data)), (uint32_t)(1000 * (*(float*)&cond.data)), *(float*)&cond.data);
       if(cond.op == STM_EQ)  return *(float*)&envelope->value.data == *(float*)&cond.data;
       if(cond.op == STM_LEQ) return *(float*)&envelope->value.data <= *(float*)&cond.data;
       if(cond.op == STM_GEQ) return *(float*)&envelope->value.data >= *(float*)&cond.data;
