@@ -68,16 +68,18 @@ function addTableLine(formName, tableName) {
 			if(i == 3) {
 				if(condDT) {
 					i++;
+					var selin = form.elements[i].selectedIndex;
 					if(form.elements[2].value == 7) {
 						var op = Number(form.elements[i].value);
 					} else {
 						var op = Number(form.elements[i].value) + Number(form.elements[i+1].value);
 					}
-					row.insertCell(j).innerHTML = op;
+					row.insertCell(j).innerHTML = form.elements[i].options[selin].innerHTML;
 					tmpArray.push(op);
 					i++;
 				} else {
-					row.insertCell(j).innerHTML = form.elements[i].value;
+					var selin = form.elements[i].selectedIndex;
+					row.insertCell(j).innerHTML = form.elements[i].options[selin].innerHTML;
 					tmpArray.push(form.elements[i].value);
 					i += 2;
 				}
@@ -119,8 +121,8 @@ function addTableLine(formName, tableName) {
 		</script>
 		<p>Condition Table Input:</p>
 			<form id="CondTableForm" action="">
-				Source IP: <input type="text" id="sourceIP" /><br />
-				Source EID: <input type="text" id="sourceEID" /><br />
+				Source IP (zero-padded): <input type="text" id="sourceIP" /><br />
+				Source EID: <input type="text" size="3" id="sourceEID" /><br />
 				DataType: <select id="dTypeCond" onchange="javascript:alterValue(document.forms['CondTableForm'].elements[2].options[document.forms['CondTableForm'].elements[2].selectedIndex].value, 'cv')">
 					<option value="1">Bool</option>
 					<option value="2">Int8</option>
@@ -154,7 +156,7 @@ function addTableLine(formName, tableName) {
 						<option value="64">Weekday</option>
 					</select> 
 				</div>
-				Value: <input type="text" id="valueCond" /><br />
+				Value: <input type="text" size="4" id="valueCond" /><br />
 			</form>
 			<button type="button" onclick="javascript:addTableLine('CondTableForm', 'condTable');">Add Line</button>
 	<p>Current Condition Table:</p>
@@ -169,11 +171,12 @@ function addTableLine(formName, tableName) {
 				</tr>
 			</table>
 			<hr>
-		<p>Transition Table Input:</p>
+			<p>Transition Table Input:<br />
+			<i>Note: All states are represented by unsigned integers, initial state is 0</i></p>
 		<form id="TransTableForm" action="">
-			FromState: <input type="text" id="fromState" /><br />
+			FromState Index: <input type="text" size="3" id="fromState" /><br />
 			Condition#: <select id="condID"><option value="255">True</option></select><br />
-			EID: <input type="text" id="eid" /><br />
+			EID: <input type="text" size="3" id="eid" /><br />
 			DataType: <select id="dTypeTrans" onchange="javascript:alterValue(document.forms['TransTableForm'].elements[3].options[document.forms['TransTableForm'].elements[3].selectedIndex].value, 'tv')">
 				<option value="0">No Action (with eid = 0)</option>
 				<option value="1">Bool</option>
@@ -183,18 +186,18 @@ function addTableLine(formName, tableName) {
 				<option value="5">Float</option>
 				<option value="7">Timestamp</option>
 			</select><br />
-			<div id="tvSimple">Value: <input type="text" id="valueTrans" /><br /></div>
+			<div id="tvSimple">Value: <input type="text" size="4" id="valueTrans" /><br /></div>
 			<div id="tvComplex" style="border:solid 1px black; display:none;">
-				Hour: <input type="text" id="tHour" /><br />
-				Minute: <input type="text" id="tMinute" /><br />
-				Second: <input type="text" id="tSecond" /><br />
-				Day: <input type="text" id="tDay" /><br />
-				Month: <input type="text" id="tMonth" /><br />
-				Year: <input type="text" id="tYear" /><br />
-				Weekday: <input type="text" id="tWeekday" /><br />
+				Hour: <input type="text" size="3" id="tHour" /><br />
+				Minute: <input type="text" size="3" id="tMinute" /><br />
+				Second: <input type="text" size="3" id="tSecond" /><br />
+				Day: <input type="text" size="3" id="tDay" /><br />
+				Month: <input type="text" size="3" id="tMonth" /><br />
+				Year: <input type="text" size="3" id="tYear" /><br />
+				Weekday: <input type="text" size="3" id="tWeekday" /><br />
 			</div>
-			GoodState: <input type="text" id="goodState" /><br />
-			BadState: <input type="text" id="badState" /><br />
+			GoodState Index: <input type="text" size="3" id="goodState" /><br />
+			BadState Index: <input type="text" size="3" id="badState" /><br />
 		</form>
 		<button type="button" onclick="javascript:addTableLine('TransTableForm', 'transTable');">Add Line</button>
 		<p>Current Transition Table:</p>
