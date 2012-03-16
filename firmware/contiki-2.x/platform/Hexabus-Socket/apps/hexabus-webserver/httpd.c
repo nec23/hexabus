@@ -709,14 +709,14 @@ PT_THREAD(handle_input(struct httpd_state *s))
 					}
 					if(++position == 5) {
 						position = 0;
-						PRINTF("IP: ");
+						PRINTF("Condition struct\n IP: ");
 						for(i = 0;i < 16;i++) {
 							if(i != 0 && i % 2 == 0) {
 								PRINTF(":");
 							}
 							PRINTF("%02x", cond.sourceIP[i]);
 						}
-						PRINTF("\nStruct Cond: EID: %u Operator: %u DataType: %u \n", cond.sourceEID, cond.op, cond.datatype);
+						PRINTF(" EID: %u Operator: %u DataType: %u \n", cond.sourceEID, cond.op, cond.datatype);
 						// Write Line to EEPROM. Too much data will be truncated
 						if(numberOfBlocks < (EE_STATEMACHINE_CONDITIONS_SIZE / sizeof(struct condition))) {
 							eeprom_write_block(&cond, (void*)(numberOfBlocks*sizeof(struct condition) + 1 + EE_STATEMACHINE_CONDITIONS), sizeof(struct condition));
@@ -752,33 +752,39 @@ PT_THREAD(handle_input(struct httpd_state *s))
 							break;
 					}
 					if(++position == 7) {
-						// TODO: true condition (#255)
 						position = 0;
 						PRINTF("Struct Trans: From: %u Cond: %u EID: %u DataType: %u Good: %u Bad: %u\n", trans.fromState, trans.cond, trans.eid, trans.value.datatype, trans.goodState, trans.badState);
 						// Write Line to EEPROM. Too much data is just truncated.
-						memset(&cond, 0, sizeof(struct condition));
-						eeprom_read_block(&cond, (void*)(1 + EE_STATEMACHINE_CONDITIONS + (trans.cond * sizeof(struct condition))), sizeof(struct condition));
+						if(trans.cond != 255) {			// True Condition (#255)
+							memset(&cond, 0, sizeof(struct condition));
+							eeprom_read_block(&cond, (void*)(1 + EE_STATEMACHINE_CONDITIONS + (trans.cond * sizeof(struct condition))), sizeof(struct condition));
 						
-						printf("cond.datatype: %u\n", cond.datatype);
-						if(cond.datatype == HXB_DTYPE_DATETIME || cond.datatype == HXB_DTYPE_TIMESTAMP) {
-							PRINTF("Writing DateTime Transition...\n");
-							if(numberOfDT < (EE_STATEMACHINE_DATETIME_TRANSITIONS_SIZE / sizeof(struct transition))) {
-									eeprom_write_block(&trans, (void*)(1 + numberOfDT*sizeof(struct transition) + EE_STATEMACHINE_DATETIME_TRANSITIONS), sizeof(struct transition));
-									numberOfDT++;
+							if(cond.datatype == HXB_DTYPE_DATETIME || cond.datatype == HXB_DTYPE_TIMESTAMP) {
+								PRINTF("Writing DateTime Transition...\n");
+								if(numberOfDT < (EE_STATEMACHINE_DATETIME_TRANSITIONS_SIZE / sizeof(struct transition))) {
+										eeprom_write_block(&trans, (void*)(1 + numberOfDT*sizeof(struct transition) + EE_STATEMACHINE_DATETIME_TRANSITIONS), sizeof(struct transition));
+										numberOfDT++;
+									} else {
+										PRINTF("Warning: DateTime Transition Table too long! Data will not be written.\n");
+									}
+							} else {
+								if(numberOfBlocks < (EE_STATEMACHINE_TRANSITIONS_SIZE / sizeof(struct transition))) {
+									eeprom_write_block(&trans, (void*)(1 + numberOfBlocks*sizeof(struct transition) + EE_STATEMACHINE_TRANSITIONS), sizeof(struct transition));
+									numberOfBlocks++;
 								} else {
-									PRINTF("Warning: DateTime Transition Table too long! Data will not be written.\n");
+									PRINTF("Warning: Transition Table too long! Data will not be written.\n");
 								}
-								memset(&trans, 0, sizeof(struct transition));
+							}
 						} else {
 							if(numberOfBlocks < (EE_STATEMACHINE_TRANSITIONS_SIZE / sizeof(struct transition))) {
 									eeprom_write_block(&trans, (void*)(1 + numberOfBlocks*sizeof(struct transition) + EE_STATEMACHINE_TRANSITIONS), sizeof(struct transition));
 									numberOfBlocks++;
 								} else {
 									PRINTF("Warning: Transition Table too long! Data will not be written.\n");
-								}
-								memset(&trans, 0, sizeof(struct transition));
+							}
 						}
-					}
+						memset(&trans, 0, sizeof(struct transition));
+				}
 			}
 		}
 		PRINTF("State Machine Configurator: Done with parsing.\n");
