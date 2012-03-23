@@ -374,18 +374,18 @@ static
 PT_THREAD(handle_output(struct httpd_state *s))
 {
 	char *ptr;
-
 	PT_BEGIN(&s->outputpt);
 #if DEBUGLOGIC
 	httpd_strcpy(s->filename,httpd_indexfn);
 #endif
 	if(!httpd_fs_open(s->filename, &s->file)) {
+		printf("output: 404 Not Found\n");
 		httpd_strcpy(s->filename, httpd_404fn);
 		httpd_fs_open(s->filename, &s->file);
 		PT_WAIT_THREAD(&s->outputpt, send_headers(s, httpd_404notf));
 		PT_WAIT_THREAD(&s->outputpt, send_file(s));
 	} else {
-
+		printf("output: 200OK\n");
 		PT_WAIT_THREAD(&s->outputpt, send_headers(s, httpd_200ok));
 		ptr = strchr(s->filename, ISO_period);
 		if((ptr != NULL && httpd_strncmp(ptr, httpd_shtml, 6) == 0) || httpd_strcmp(s->filename,httpd_indexfn)==0) {
@@ -498,13 +498,12 @@ process_event_t sm_rulechange_event;
 static
 PT_THREAD(handle_input(struct httpd_state *s))
 {
-
 	PSOCK_BEGIN(&s->sin);
 
 	PSOCK_READTO(&s->sin, ISO_space);
 
 	if(httpd_strncmp(s->inputbuf, httpd_get, 4) == 0) {
-
+		printf("input: GET\n");
 		PSOCK_READTO(&s->sin, ISO_space);
 
 		if(s->inputbuf[0] != ISO_slash) {
@@ -530,7 +529,7 @@ PT_THREAD(handle_input(struct httpd_state *s))
 		}
 	}
 	else if(httpd_strncmp(s->inputbuf, httpd_post, 5) == 0) {
-
+		printf("input: POST\n");
 		PSOCK_READTO(&s->sin, ISO_space);
 
 		if(s->inputbuf[0] != ISO_slash) {
@@ -835,11 +834,14 @@ httpd_appcall(void *state)
 		struct httpd_state *s = (struct httpd_state *)state;
 		if(uip_closed() || uip_aborted() || uip_timedout()) {
 			if(s != NULL) {
+				printf("appcall: con. closed or aborted or timed out\n");
 				memb_free(&conns, s);
 			}
 		} else if(uip_connected()) {
+			printf("appcall: connected\n");
 			s = (struct httpd_state *)memb_alloc(&conns);
 			if(s == NULL) {
+				printf("appcall: s == null\n");
 				uip_abort();
 				return;
 			}
@@ -855,7 +857,9 @@ httpd_appcall(void *state)
 		} else if(s != NULL) {
 			if(uip_poll()) {
 				++s->timer;
+				printf("appcall: timer++\n");
 				if(s->timer >= 20) {
+					printf("appcall: timer >= 20 (timeout?)\n");
 					uip_abort();
 					memb_free(&conns, s);
 				}
@@ -864,6 +868,7 @@ httpd_appcall(void *state)
 			}
 			handle_connection(s);
 		} else {
+			printf("appcall: Aborting...\n");
 			uip_abort();
 		}
 	}

@@ -56,8 +56,9 @@ PROCESS_THREAD(webserver_nogui_process, ev, data)
   httpd_init();
 
   while(1) {
-    PROCESS_WAIT_EVENT_UNTIL(ev == tcpip_event);
-    httpd_appcall(data);
+		PROCESS_WAIT_EVENT_UNTIL(ev == tcpip_event);
+    printf("WS: Received TCP/IP Event\n");
+		httpd_appcall(data);
   }
   
   PROCESS_END();
