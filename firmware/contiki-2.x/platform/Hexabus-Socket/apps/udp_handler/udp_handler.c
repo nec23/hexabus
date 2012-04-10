@@ -191,7 +191,6 @@ static struct hxb_packet_128string make_epinfo_packet(uint8_t eid)
 
   packet.crc = uip_htons(crc16_data((char*)&packet, sizeof(packet)-2, 0));
 
-
   return packet;
 }
 
@@ -382,9 +381,15 @@ udphandler(process_event_t ev, process_data_t data)
             send_packet(&error_packet, sizeof(error_packet));
           } else
           {
-            PRINTF("Sending EndpointInfo packet...\n");
-            struct hxb_packet_128string epinfo_packet = make_epinfo_packet(packet->eid);
-            send_packet(&epinfo_packet, sizeof(epinfo_packet));
+            if(endpoint_get_datatype(packet->eid) != HXB_DTYPE_UNDEFINED)
+            {
+              PRINTF("Sending EndpointInfo packet...\n");
+              struct hxb_packet_128string epinfo_packet = make_epinfo_packet(packet->eid);
+              send_packet(&epinfo_packet, sizeof(epinfo_packet));
+            } else {
+              struct hxb_packet_error error_packet = make_error_packet(HXB_ERR_UNKNOWNEID);
+              send_packet(&error_packet, sizeof(error_packet));
+            }
           }
         }
         else if(header->type == HXB_PTYPE_INFO)
