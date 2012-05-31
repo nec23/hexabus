@@ -32,6 +32,7 @@ static uint8_t dtTransLength; // length of date/time transition table
 static uint8_t curState = 0;  // starting out in state 0
 static uint32_t inStateSince; // when die we change into that state
 static uint8_t dt_valid;      // internal clock has a valid date/time
+static bool running = true;		// indicates if state machine should be running or not
 
 bool eval(uint8_t condIndex, struct hxb_envelope *envelope) {
   struct condition cond;
@@ -211,6 +212,19 @@ void check_value_transitions(void* data)
   free(t);
 }
 
+void sm_stop() {
+	running = false;
+}
+
+void sm_restart() {
+		// re-read state machine table length from eeprom
+		transLength = sm_get_number_of_transitions(false);
+		dtTransLength = sm_get_number_of_transitions(true);
+		PRINTF("State Machine: Re-Reading Table length.\n");
+		PRINTF("TransLength: %d, dtTransLength: %d\n", transLength, dtTransLength);
+		running = true;
+}
+
 PROCESS_THREAD(state_machine_process, ev, data)
 {
   PROCESS_BEGIN();
@@ -255,29 +269,26 @@ PROCESS_THREAD(state_machine_process, ev, data)
 
   while(1)
   {
-    PROCESS_WAIT_EVENT();
-    PRINTF("State machine: Received event\r\n");
-    PRINTF("state machine: Current state: %d\r\n", curState);
-    if(ev == PROCESS_EVENT_TIMER)
-    {
-      check_datetime_transitions();
-      etimer_reset(&check_timer);
-    }
-    if(ev == sm_data_received_event)
-    {
-      check_value_transitions(data);
-      free(data);
+    if(running) {
+			PROCESS_WAIT_EVENT();
+    	PRINTF("State machine: Received event\r\n");
+    	PRINTF("state machine: Current state: %d\r\n", curState);
+    	if(ev == PROCESS_EVENT_TIMER)
+    	{
+      	check_datetime_transitions();
+      	etimer_reset(&check_timer);
+    	}
+    	if(ev == sm_data_received_event)
+    	{
+      	check_value_transitions(data);
+      	free(data);
 
-      PRINTF("state machine: Now in state: %d\r\n", curState);
-    }
-    if(ev == sm_rulechange_event) {
-      // re-read state machine table length from eeprom
-      transLength = sm_get_number_of_transitions(false);	//eeprom_read_byte((void*)EE_STATEMACHINE_TRANSITIONS);
-      dtTransLength = sm_get_number_of_transitions(true);	//eeprom_read_byte((void*)EE_STATEMACHINE_DATETIME_TRANSITIONS);
-      PRINTF("State Machine: Re-Reading Table length.\n");
-      PRINTF("TransLength: %d, dtTransLength: %d\n", transLength, dtTransLength);
-    }
-  }
+      	PRINTF("state machine: Now in state: %d\r\n", curState);
+    	}
+  	} else {
+			PROCESS_YIELD();
+		}
+	}
 
   PROCESS_END();
 }

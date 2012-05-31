@@ -33,9 +33,11 @@ struct transition {
   struct hxb_value value;  // Data for the endpoint
 } __attribute__ ((packed));
 
+// Functions for starting/stopping the state machine
+void sm_stop();
+void sm_restart();
 
 // Defintion of events that are important to the state machine
 // One general event for all data that can be possibly received
 extern process_event_t sm_data_received_event;
-extern process_event_t sm_rulechange_event;
 #endif /* STATE_MACHINE_H_*/
